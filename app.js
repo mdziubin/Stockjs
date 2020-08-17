@@ -21,8 +21,17 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
+
 app.use("/test", testRoutes);
 app.use("/auth", authRoutes);
+
+app.use((error, req, res, next) => {
+  console.log(error);
+  const status = error.status || 500;
+  const message = error.message;
+  const data = error.data;
+  res.status(status).json({ message: message, data: data });
+});
 
 mongoose
   .connect(process.env.MONGO_URL, {

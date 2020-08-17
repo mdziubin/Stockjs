@@ -9,6 +9,15 @@ exports.signUp = (req, res, next) => {
   const name = req.body.name;
   const password = req.body.password;
 
+  // Check for errors
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = new Error("Validation failed");
+    error.status = 422;
+    error.data = errors.array();
+    throw error;
+  }
+
   // Encrypt password
   bcrypt
     .hash(password, 12)

@@ -34,3 +34,45 @@ exports.signUp = (req, res, next) => {
       console.log(err);
     });
 };
+
+exports.signIn = (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  let loadedUser;
+
+  // Search db for email
+  User.findOne({ email: email })
+    .then((userDoc) => {
+      if (!userDoc) {
+        const error = new Error(`No user found with email: ${email}`);
+        error.status = 401;
+        throw error;
+      }
+      loadedUser = userDoc;
+      // Verify password
+      return bcrypt.compare(password, loadedUser.password);
+    })
+    .then((isEqual) => {
+      if (!isEqual) {
+        const error = new Error("Incorrect password");
+        error.status = 401;
+        throw error;
+      }
+      // Generate JWT
+      const token = jwt.sign(
+        {
+          email: loadedUser.email,
+          userId: loadedUser._id.toString(),
+        },
+        process.env.JWT_PRIVATE_KEY,
+        { expiresIn: "1h" }
+      );
+      res.status(200).json({ token: token, userId: loadedUser._id.toString() });
+    })
+    .catch((err) => {
+      if (!err.status) {
+        err.status = 500;
+      }
+      next(err);
+    });
+};

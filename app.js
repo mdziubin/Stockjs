@@ -7,6 +7,7 @@ require("dotenv").config();
 // Route Imports
 const testRoutes = require("./routes/test.js");
 const authRoutes = require("./routes/auth.js");
+const marketRoutes = require("./routes/market.js");
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use((req, res, next) => {
 
 app.use("/test", testRoutes);
 app.use("/auth", authRoutes);
+app.use("/market", marketRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);

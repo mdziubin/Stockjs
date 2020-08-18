@@ -14,6 +14,10 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  perm: {
+    type: String,
+    default: "user",
+  },
   stocks: [
     {
       type: Schema.Types.ObjectId,

@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 require("dotenv").config();
+// const loadDb = require("./util/loadStocks");
 
 // Route Imports
 const testRoutes = require("./routes/test.js");
@@ -42,6 +43,9 @@ mongoose
   })
   .then((result) => {
     app.listen(8080);
+  })
+  .then((result) => {
+    // loadDb();
   })
   .catch((err) => {
     console.log(err);

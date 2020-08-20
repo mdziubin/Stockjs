@@ -8,7 +8,8 @@ const exchangeController = require("../controllers/exchange.js");
 
 const router = express.Router();
 
-// Post /exchange
+// Post /market/exchange
+// Add an exchange
 router.post(
   "/exchange",
   isAuth,

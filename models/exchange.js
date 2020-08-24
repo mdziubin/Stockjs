@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const exchangeSchema = new Schema({
-  abv: {
+  exchange: {
     type: String,
     required: true,
     maxlength: 10,

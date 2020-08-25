@@ -45,7 +45,7 @@ exports.addStock = async (req, res, next) => {
     }
 
     const symbol = req.body.symbol;
-    const exchangeID = req.exchangeID;
+    const exchange = req.body.exchange;
 
     // Get full stock name
     const name = await stockName(symbol);
@@ -54,7 +54,7 @@ exports.addStock = async (req, res, next) => {
     const stock = new Stock({
       name: name,
       symbol: symbol,
-      exchange: exchangeID,
+      exchange: exchange,
     });
     await stock.save();
 

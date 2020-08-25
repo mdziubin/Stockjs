@@ -13,8 +13,8 @@ const stockSchema = new Schema({
     maxlength: 6,
   },
   exchange: {
-    type: Schema.Types.ObjectId,
-    ref: "Exchange",
+    type: String,
+    required: true,
   },
 });
 

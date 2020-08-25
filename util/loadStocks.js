@@ -6,9 +6,6 @@ const Exchange = require("../models/exchange");
 const Stock = require("../models/stock");
 
 const loadtoDb = async () => {
-  // Get the exchange reference from the db
-  const { _id } = await Exchange.findOne({ name: "NASDAQ" });
-
   // Parse json of all listed stock on specified exchange
   const res = await fetch(
     "https://pkgstore.datahub.io/core/nasdaq-listings/nasdaq-listed-symbols_json/data/5c10087ff8d283899b99f1c126361fa7/nasdaq-listed-symbols_json.json"
@@ -19,7 +16,7 @@ const loadtoDb = async () => {
   let stockArray = body.map(({ ["Company Name"]: name, Symbol: symbol }) => ({
     name,
     symbol,
-    exchange: _id,
+    exchange: "NASDAQ",
   }));
 
   // Test saving a few stocks to the db for now

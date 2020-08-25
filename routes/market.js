@@ -46,7 +46,6 @@ router.post(
           console.log(exDoc);
           return Promise.reject("Exchange not supported");
         }
-        req.exchangeID = exDoc._id;
       }),
     body("symbol")
       .trim()
@@ -55,8 +54,9 @@ router.post(
       .custom(async (value, { req }) => {
         const stock = await Stock.findOne({
           symbol: value,
-          exchange: req.exchangeID,
+          exchange: req.body.exchange,
         });
+        console.log(req.exchange);
         if (stock) {
           return Promise.reject("Stock already added");
         }

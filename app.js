@@ -6,9 +6,10 @@ require("dotenv").config();
 // const loadDb = require("./util/loadStocks");
 
 // Route Imports
-const testRoutes = require("./routes/test.js");
-const authRoutes = require("./routes/auth.js");
-const marketRoutes = require("./routes/market.js");
+const testRoutes = require("./routes/test");
+const authRoutes = require("./routes/auth");
+const marketRoutes = require("./routes/market");
+const dashRoutes = require("./routes/dash");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use((req, res, next) => {
 app.use("/test", testRoutes);
 app.use("/auth", authRoutes);
 app.use("/market", marketRoutes);
+app.use("/dash", dashRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);

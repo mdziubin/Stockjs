@@ -56,7 +56,6 @@ router.post(
           symbol: value,
           exchange: req.body.exchange,
         });
-        console.log(req.exchange);
         if (stock) {
           return Promise.reject("Stock already added");
         }

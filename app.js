@@ -2,6 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+
 require("dotenv").config();
 // const loadDb = require("./util/loadStocks");
 
@@ -40,11 +41,13 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(process.env.MONGO_URL, {
+    dbName: process.env.DB_NAME,
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then((result) => {
     app.listen(8080);
+    console.log("Server running");
   })
   .then((result) => {
     // loadDb();
@@ -52,3 +55,23 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+
+// Function to terminate app gracefully
+const gracefulShutdown = () => {
+  // First argument is [force], see mongoose doc.
+  mongoose.connection.close(false, () => {
+    console.log("MongoDb connection closed.");
+    process.exit(0);
+  });
+};
+
+// This will handle kill commands, such as CTRL+C:
+process.on("SIGINT", gracefulShutdown);
+
+// Function for server closing
+app.serverClose = () => {
+  gracefulShutdown();
+};
+
+// Export app for testing
+module.exports = app;

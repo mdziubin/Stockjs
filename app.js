@@ -9,7 +9,7 @@ require("dotenv").config();
 // Route Imports
 const testRoutes = require("./routes/test");
 const authRoutes = require("./routes/auth");
-const marketRoutes = require("./routes/market");
+const adminRoutes = require("./routes/admin");
 const dashRoutes = require("./routes/dash");
 
 const app = express();
@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 
 app.use("/test", testRoutes);
 app.use("/auth", authRoutes);
-app.use("/market", marketRoutes);
+app.use("/admin", adminRoutes);
 app.use("/dash", dashRoutes);
 
 app.use((error, req, res, next) => {
@@ -45,12 +45,9 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then((result) => {
+  .then(() => {
     app.listen(8080);
     console.log("Server running");
-  })
-  .then((result) => {
-    // loadDb();
   })
   .catch((err) => {
     console.log(err);

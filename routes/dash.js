@@ -11,4 +11,7 @@ router.get("/stocks", isAuth, dashController.getStocks);
 // POST /dash/stock
 router.post("/stock", isAuth, dashController.addStock);
 
+// DEL /dash/stock/:stockId
+router.delete("/stock/:stockId", isAuth, dashController.delStock);
+
 module.exports = router;

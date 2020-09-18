@@ -60,3 +60,30 @@ exports.addStock = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.delStock = async (req, res, next) => {
+  try {
+    const uId = req.userId;
+    const sId = req.params.stockId;
+
+    const user = await User.findById(uId);
+
+    // Check if user has this stock in favorites
+    if (!user.stocks.find((el) => sId)) {
+      const error = new Error("Cannot delete stock not in favorites");
+      error.status = 422;
+      throw error;
+    }
+
+    // Delete the stock locally and then save changes
+    user.stocks.pull(sId);
+    await user.save();
+
+    res.status(200).json({ message: "Deleted favorited stock" });
+  } catch (error) {
+    if (!error.status) {
+      error.status = 500;
+    }
+    next(error);
+  }
+};

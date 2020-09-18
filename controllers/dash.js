@@ -13,8 +13,8 @@ exports.getStocks = async (req, res, next) => {
       user: user.name,
     });
   } catch (error) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
+    if (!error.status) {
+      error.status = 500;
     }
     next(error);
   }
@@ -23,17 +23,27 @@ exports.getStocks = async (req, res, next) => {
 exports.addStock = async (req, res, next) => {
   try {
     const uId = req.userId;
-    const sId = req.body.sId;
+    const symbol = req.body.symbol;
+    const exchange = req.body.exchange;
 
-    const stock = await Stock.findById(sId);
-
+    // Check if stock is in db
+    const stock = await Stock.findOne({ symbol: symbol, exchange: exchange });
     if (!stock) {
-      const error = new Error("Invalid stock id provided, no record");
-      error.statusCode = 422;
+      const error = new Error(
+        `No stock found with symbol: ${symbol} and exchange: ${exchange}`
+      );
+      error.status = 422;
       throw error;
     }
 
     const user = await User.findById(uId);
+
+    // Check if user has already favorited this stock
+    if (user.stocks.find((el) => stock._id.equals(el))) {
+      const error = new Error("Stock already favorited");
+      error.status = 422;
+      throw error;
+    }
 
     user.stocks.push(stock);
     await user.save();
@@ -44,8 +54,8 @@ exports.addStock = async (req, res, next) => {
       user: user.name,
     });
   } catch (error) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
+    if (!error.status) {
+      error.status = 500;
     }
     next(error);
   }

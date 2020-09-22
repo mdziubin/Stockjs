@@ -4,8 +4,17 @@ const User = require("../models/user");
 exports.getStocks = async (req, res, next) => {
   try {
     const uId = req.userId;
+    const currentPage = req.query.page || 1;
+    const perPage = 10;
 
-    const user = await User.findById(uId).populate("stocks");
+    // Query the user info but paginate the favorited stocks using slice([<skip, perPage>])
+    let userQuery = User.findById(uId)
+      .slice("stocks", [perPage * (currentPage - 1), perPage])
+      .populate("stocks");
+
+    let user = await userQuery.exec();
+
+    console.log(user);
 
     res.status(200).json({
       message: "Stocks retrieved",

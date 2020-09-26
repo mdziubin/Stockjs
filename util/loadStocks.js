@@ -16,7 +16,7 @@ const loadtoDb = async () => {
   let stockArray = body.map(({ ["Company Name"]: name, Symbol: symbol }) => ({
     name,
     symbol,
-    exchange: "NASDAQ",
+    exchange: "NYSE",
   }));
 
   // Test saving a few stocks to the db for now

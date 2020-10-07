@@ -14,8 +14,6 @@ exports.getStocks = async (req, res, next) => {
 
     let user = await userQuery.exec();
 
-    console.log(user);
-
     res.status(200).json({
       message: "Stocks retrieved",
       stocks: user.stocks,

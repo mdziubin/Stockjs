@@ -65,7 +65,7 @@ exports.signIn = (req, res, next) => {
           userId: loadedUser._id.toString(),
         },
         process.env.JWT_PRIVATE_KEY,
-        { expiresIn: "1h" }
+        { expiresIn: "24h" }
       );
       res.status(200).json({ token: token, userId: loadedUser._id.toString() });
     })

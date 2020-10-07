@@ -31,6 +31,11 @@ app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/dash", dashRoutes);
 
+app.use((req, res) => {
+  console.log("Request to non-existant route " + req.url + " 404ed");
+  res.status(404).json({ message: "Route not found" });
+});
+
 app.use((error, req, res, next) => {
   console.log(error);
   const status = error.status || 500;

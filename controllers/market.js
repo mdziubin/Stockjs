@@ -5,6 +5,46 @@ const Stock = require("../models/stock");
 
 const stockName = require("../util/stockName");
 
+exports.getStocks = async (req, res, next) => {
+  try {
+    const currentPage = req.query.page || 1;
+    const filter = req.query.filter;
+    const perPage = 18;
+
+    // Case insensitive "contains" query filter of name and symbol fields in stock collection
+    const queryFilter = {
+      $or: [
+        { name: { $regex: `.*${filter}.*`, $options: "i" } },
+        { symbol: { $regex: `.*${filter.toUpperCase()}.*` } },
+      ],
+    };
+
+    // Find total count resulting from query
+    const queryCount = await Stock.countDocuments(queryFilter);
+
+    // Get a paginated sample of the same query
+    const stocksQuery = Stock.find(queryFilter)
+      .limit(perPage)
+      .skip(perPage * (currentPage - 1))
+      .sort({ symbol: "asc" });
+
+    // TODO: Aggregate the count and limit query to save on compute power
+
+    const stocks = await stocksQuery.exec();
+
+    res.status(200).json({
+      message: "Stocks retrieved",
+      stocks: stocks,
+      pages: Math.ceil(queryCount / perPage),
+    });
+  } catch (error) {
+    if (!error.status) {
+      error.status = 500;
+    }
+    next(error);
+  }
+};
+
 exports.addExchange = (req, res, next) => {
   const symbol = req.body.symbol;
   const name = req.body.name;

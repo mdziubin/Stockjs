@@ -11,6 +11,10 @@ const marketController = require("../controllers/market");
 
 const router = express.Router();
 
+// GET /market/stocks
+// Get an array of supported stocks
+router.get("/stocks", isAuth, marketController.getStocks);
+
 // Post market/exchange
 // Add an exchange to db
 router.post(

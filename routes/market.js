@@ -7,14 +7,14 @@ const Stock = require("../models/stock");
 const isAuth = require("../middleware/is-auth");
 const isAdmin = require("../middleware/is-admin");
 
-const adminController = require("../controllers/admin");
+const marketController = require("../controllers/market");
 
 const router = express.Router();
 
-// Post admin/market/exchange
+// Post market/exchange
 // Add an exchange to db
 router.post(
-  "/market/exchange",
+  "/exchange",
   isAuth,
   isAdmin,
   [
@@ -29,13 +29,13 @@ router.post(
       }),
     body("name").trim().not().isEmpty(),
   ],
-  adminController.addExchange
+  marketController.addExchange
 );
 
-// Post admin/market/stock
+// Post market/stock
 // Add an individual stock to db
 router.post(
-  "/market/stock",
+  "/stock",
   isAuth,
   isAdmin,
   [
@@ -62,7 +62,7 @@ router.post(
         }
       }),
   ],
-  adminController.addStock
+  marketController.addStock
 );
 
 module.exports = router;

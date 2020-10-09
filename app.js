@@ -9,7 +9,7 @@ require("dotenv").config();
 // Route Imports
 const testRoutes = require("./routes/test");
 const authRoutes = require("./routes/auth");
-const adminRoutes = require("./routes/admin");
+const marketRoutes = require("./routes/market");
 const dashRoutes = require("./routes/dash");
 
 const app = express();
@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 
 app.use("/test", testRoutes);
 app.use("/auth", authRoutes);
-app.use("/admin", adminRoutes);
+app.use("/market", marketRoutes);
 app.use("/dash", dashRoutes);
 
 app.use((req, res) => {

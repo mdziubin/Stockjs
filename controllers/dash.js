@@ -31,14 +31,11 @@ exports.addStock = async (req, res, next) => {
   try {
     const uId = req.userId;
     const symbol = req.body.symbol;
-    const exchange = req.body.exchange;
 
     // Check if stock is in db
-    const stock = await Stock.findOne({ symbol: symbol, exchange: exchange });
+    const stock = await Stock.findOne({ symbol: symbol });
     if (!stock) {
-      const error = new Error(
-        `No stock found with symbol: ${symbol} and exchange: ${exchange}`
-      );
+      const error = new Error(`No stock found with symbol: ${symbol}`);
       error.status = 422;
       throw error;
     }
@@ -76,7 +73,7 @@ exports.delStock = async (req, res, next) => {
     const user = await User.findById(uId);
 
     // Check if user has this stock in favorites
-    if (!user.stocks.find((el) => sId)) {
+    if (!user.stocks.find((el) => el._id.equals(sId))) {
       const error = new Error("Cannot delete stock not in favorites");
       error.status = 422;
       throw error;

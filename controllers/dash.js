@@ -1,22 +1,29 @@
 const Stock = require("../models/stock");
 const User = require("../models/user");
+const mongoose = require("mongoose");
 
 exports.getStocks = async (req, res, next) => {
   try {
     const uId = req.userId;
     const currentPage = req.query.page || 1;
-    const perPage = 10;
+    const perPage = req.query.per || 10;
 
     // Query the user info but paginate the favorited stocks using slice([<skip, perPage>])
-    let userQuery = User.findById(uId)
-      .slice("stocks", [perPage * (currentPage - 1), perPage])
+    const userQuery = User.findById(uId)
+      .slice("stocks", [perPage * (currentPage - 1), +perPage])
       .populate("stocks");
+    const user = await userQuery.exec();
 
-    let user = await userQuery.exec();
+    // Find total count resulting from unpaginated query
+    const [{ count }] = await User.aggregate([
+      { $match: { _id: mongoose.Types.ObjectId(uId) } },
+      { $project: { _id: 0, count: { $size: "$stocks" } } },
+    ]);
 
     res.status(200).json({
       message: "Stocks retrieved",
       stocks: user.stocks,
+      count: count,
       user: user.name,
     });
   } catch (error) {
